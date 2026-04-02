@@ -1,47 +1,79 @@
 const service = require("../services/postService");
 
 const postBlog = async (req, res) => {
-  const { id } = req.user.user;
-  const { title, blog } = req.body;
+  try {
+    const { id } = req.user.user;
+    const { title, blog } = req.body;
 
-  await service.postBlog(id, title, blog);
+    if (!title || !blog) {
+      return res.status(400).json({ message: "Title and blog are required" });
+    }
 
-  return res.json({ id, title, blog });
+    await service.postBlog(id, title, blog);
+
+    return res.status(201).json({ id, title, blog });
+  } catch {
+    return res.status(500).json({ message: "Failed to create blog post" });
+  }
 };
 
 const getPost = async (req, res) => {
-  const { postid } = req.params;
+  try {
+    const { postid } = req.params;
 
-  const post = await service.getPost(postid);
+    const post = await service.getPost(postid);
 
-  return res.json(post);
+    if (!post) {
+      return res.status(404).json({ post: "Post not found" });
+    }
+
+    return res.status(200).json(post);
+  } catch {
+    return res.status(500).json({ message: "Server Error" });
+  }
 };
 
 const getPosts = async (req, res) => {
-  const { id } = req.user.user;
+  try {
+    const { id } = req.user.user;
 
-  const posts = await service.getPosts(id);
+    const posts = await service.getPosts(id);
 
-  return res.json(posts);
+    return res.status(200).json(posts);
+  } catch {
+    return res.status(500).json({ message: "Server Error" });
+  }
 };
 
 const putPost = async (req, res) => {
-  const { postid } = req.params;
-  const { title, blog } = req.body;
+  try {
+    const { postid } = req.params;
+    const { title, blog } = req.body;
 
-  await service.putPost(postid, title, blog);
+    if (!title || !blog) {
+      return res.status(400).json({ message: "Title and blog are required" });
+    }
 
-  return res.json({ postid, title, blog });
+    await service.putPost(postid, title, blog);
+
+    return res.status(200).json({ postid, title, blog });
+  } catch {
+    return res.status(500).json({ message: "Failed to update post" });
+  }
 };
 
 const deletePost = async (req, res) => {
-  const { postid } = req.params;
+  try {
+    const { postid } = req.params;
 
-  console.log(deletePost);
+    console.log(deletePost);
 
-  await service.deletePost(postid);
+    await service.deletePost(postid);
 
-  return res.json({ message: "DELETED" });
+    return res.status(204).send();
+  } catch {
+    return res.status(404).json({ error: "Post doesn't exist" });
+  }
 };
 
 module.exports = {

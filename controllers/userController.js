@@ -3,17 +3,35 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET;
 
 const postUser = async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  await service.postUser(username, password);
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username and password are required" });
+    }
 
-  return res.json({ username, password });
+    await service.postUser(username, password);
+
+    return res.status(201).json({ username, password });
+  } catch {
+    return res.status(500).json({ message: "Failed to create user" });
+  }
 };
 
 const getUser = async (req, res) => {
-  const user = await service.getUser(req.body.username);
+  try {
+    const user = await service.getUser(req.user.user.id);
 
-  return res.json({ user });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ user });
+  } catch {
+    return res.status(500).json({ message: "Server Error" });
+  }
 };
 
 const login = async (req, res) => {
@@ -41,7 +59,6 @@ const login = async (req, res) => {
     res.status(500).json({
       message: "Login Failed",
     });
-    console.error(error);
   }
 };
 

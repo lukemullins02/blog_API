@@ -6,11 +6,15 @@ const postComment = async (req, res) => {
     const { postid } = req.params;
     const { text } = req.body;
 
+    if (!text) {
+      return res.status(400).json({ message: "Text is required" });
+    }
+
     await service.postComment(id, postid, text);
 
-    return res.json({ id, postid, text });
+    return res.status(201).json({ id, postid, text });
   } catch {
-    return res.json({ error: "Failed to Create Comment" });
+    return res.status(500).json({ message: "Failed to create comment" });
   }
 };
 
@@ -21,12 +25,12 @@ const getComment = async (req, res) => {
     const comment = await service.getComment(commentid);
 
     if (!comment) {
-      return res.json({ error: "Comment Doesn't Exist" });
+      return res.status(404).json({ message: "Comment not found" });
     }
 
-    return res.json(comment);
+    return res.status(200).json(comment);
   } catch {
-    return res.json({ error: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -36,9 +40,9 @@ const getComments = async (req, res) => {
 
     const comments = await service.getComments(postid);
 
-    return res.json(comments);
+    return res.status(200).json(comments);
   } catch {
-    return res.json({ error: "No Comments for Post" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -48,14 +52,14 @@ const putComment = async (req, res) => {
     const { text } = req.body;
 
     if (!text) {
-      return res.json({ error: "Failed to update comment" });
+      return res.status(400).json({ message: "Text is required" });
     }
 
     await service.putComment(commentid, text);
 
-    return res.json({ commentid, text });
+    return res.status(200).json({ commentid, text });
   } catch {
-    return res.json({ error: "Comment doesn't exist" });
+    return res.status(500).json({ message: "Failed to update comment" });
   }
 };
 
@@ -65,9 +69,9 @@ const deleteComment = async (req, res) => {
 
     await service.deleteComment(commentid);
 
-    return res.json({ message: "DELETED" });
+    return res.status(204).send();
   } catch {
-    return res.json({ error: "Comment doesn't exist" });
+    return res.status(404).json({ error: "Comment doesn't exist" });
   }
 };
 
