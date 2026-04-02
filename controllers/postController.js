@@ -11,7 +11,7 @@ const postBlog = async (req, res) => {
 const getPost = async (req, res) => {
   const { postid } = req.params;
 
-  const post = await service.getPost(Number(postid));
+  const post = await service.getPost(postid);
 
   return res.json(post);
 };

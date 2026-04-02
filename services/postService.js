@@ -12,7 +12,7 @@ async function postBlog(userID, title, blog) {
 
 async function getPost(id) {
   return await prisma.post.findUnique({
-    where: { id },
+    where: { id: Number(id) },
   });
 }
 
