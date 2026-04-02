@@ -1,21 +1,28 @@
 const service = require("../services/postService");
+const validatePost = require("../validation/validatePost");
+const { validationResult, matchedData } = require("express-validator");
 
-const postBlog = async (req, res) => {
-  try {
-    const { id } = req.user.user;
-    const { title, blog } = req.body;
+const postBlog = [
+  validatePost,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
 
-    if (!title || !blog) {
-      return res.status(400).json({ message: "Title and blog are required" });
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
+
+      const { id } = req.user.user;
+      const { title, blog } = matchedData(req);
+
+      await service.postBlog(id, title, blog);
+
+      return res.status(201).json({ id, title, blog });
+    } catch {
+      return res.status(500).json({ message: "Failed to create blog post" });
     }
-
-    await service.postBlog(id, title, blog);
-
-    return res.status(201).json({ id, title, blog });
-  } catch {
-    return res.status(500).json({ message: "Failed to create blog post" });
-  }
-};
+  },
+];
 
 const getPost = async (req, res) => {
   try {

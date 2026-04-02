@@ -1,22 +1,33 @@
 const service = require("../services/commentService");
+const validateComment = require("../validation/validateComment");
+const { validationResult, matchedData } = require("express-validator");
 
-const postComment = async (req, res) => {
-  try {
-    const { id } = req.user.user;
-    const { postid } = req.params;
-    const { text } = req.body;
+const postComment = [
+  validateComment,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
 
-    if (!text) {
-      return res.status(400).json({ message: "Text is required" });
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
+
+      const { id } = req.user.user;
+      const { postid } = req.params;
+      const { text } = matchedData(req);
+
+      if (!text) {
+        return res.status(400).json({ message: "Text is required" });
+      }
+
+      await service.postComment(id, postid, text);
+
+      return res.status(201).json({ id, postid, text });
+    } catch {
+      return res.status(500).json({ message: "Failed to create comment" });
     }
-
-    await service.postComment(id, postid, text);
-
-    return res.status(201).json({ id, postid, text });
-  } catch {
-    return res.status(500).json({ message: "Failed to create comment" });
-  }
-};
+  },
+];
 
 const getComment = async (req, res) => {
   try {
