@@ -10,4 +10,4 @@ router.get("/:postid", verifyToken, controller.getPost);
 router.put("/:postid", verifyToken, controller.putPost);
 router.delete("/:postid", verifyToken, controller.deletePost);
 
-export default router;
+module.exports = router;

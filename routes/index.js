@@ -2,7 +2,7 @@ const user = require("./user");
 const post = require("./post");
 const comment = require("./comment");
 
-export default {
+module.exports = {
   user,
   post,
   comment,
