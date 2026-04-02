@@ -1,11 +1,12 @@
 const service = require("../services/postService");
 
 const postBlog = async (req, res) => {
-  const { userID, title, blog } = req.body;
+  const { id } = req.user.user;
+  const { title, blog } = req.body;
 
-  await service.postBlog(userID, title, blog);
+  await service.postBlog(id, title, blog);
 
-  return res.json({ userID, title, blog });
+  return res.json({ id, title, blog });
 };
 
 const getPost = async (req, res) => {
@@ -17,7 +18,7 @@ const getPost = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.user.user;
 
   const posts = await service.getPosts(id);
 

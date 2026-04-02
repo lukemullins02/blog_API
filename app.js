@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use("/", routes.user);
 app.use("/posts", routes.post);
-app.use("/posts/:postid/comments", routes.comment);
+app.use("/posts", routes.comment);
 
 app.listen(process.env.PORT, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`),
