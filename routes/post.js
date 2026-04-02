@@ -1,6 +1,6 @@
-import { Router } from "express";
+const { Router } = require("express");
 const controller = require("../controllers/postController");
-import verifyToken from "../middleware/verifyToken.js";
+const verifyToken = require("../middleware/verifyToken");
 
 const router = Router();
 

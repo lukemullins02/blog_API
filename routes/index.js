@@ -1,6 +1,6 @@
-import user from "./user.js";
-import post from "./post.js";
-import comment from "./comment.js";
+const user = require("./user");
+const post = require("./post");
+const comment = require("./comment");
 
 export default {
   user,
