@@ -23,12 +23,13 @@ model User{
 
 model Post{
   id Int @id @default(autoincrement())
-  title String @unique
+  title String 
   blog String 
   uploadAt DateTime @default(now())
   user User  @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID Int @map("user_id")
   comments Comment[]
+  @@unique([title, userID])
   @@map("posts")
 }
 
