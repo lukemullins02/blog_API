@@ -1,6 +1,6 @@
 import { Router } from "express";
 const controller = require("../controllers/postController");
-import verifyToken from "../middleware/verifyToken";
+import verifyToken from "../middleware/verifyToken.js";
 
 const router = Router();
 
