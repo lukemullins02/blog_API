@@ -1,5 +1,6 @@
 const service = require("../services/userService");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const secret = process.env.SECRET;
 
 const postUser = async (req, res) => {
@@ -12,25 +13,21 @@ const postUser = async (req, res) => {
         .json({ message: "Username and password are required" });
     }
 
-    await service.postUser(username, password);
+    const userExists = await service.getUser(username);
+
+    if (userExists) {
+      return res
+        .status(400)
+        .json({ message: "Username already registered. Try again." });
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    await service.postUser(username, hashPassword);
 
     return res.status(201).json({ username, password });
   } catch {
     return res.status(500).json({ message: "Failed to create user" });
-  }
-};
-
-const getUser = async (req, res) => {
-  try {
-    const user = await service.getUser(req.user.user.id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    return res.status(200).json({ user });
-  } catch {
-    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -46,10 +43,12 @@ const login = async (req, res) => {
       });
     }
 
-    if (!password) {
-      return res.status(401).json({
-        message: "Invalid Password. Try again.",
-      });
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      return res
+        .status(400)
+        .json({ message: "Incorrect Password. Try again." });
     }
 
     const token = jwt.sign({ user }, secret, { expiresIn: "1h" });
@@ -64,6 +63,5 @@ const login = async (req, res) => {
 
 module.exports = {
   postUser,
-  getUser,
   login,
 };
