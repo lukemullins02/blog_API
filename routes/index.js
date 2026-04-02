@@ -1,6 +1,6 @@
-import user from "./user";
-import post from "./post";
-import comment from "./comment";
+import user from "./user.js";
+import post from "./post.js";
+import comment from "./comment.js";
 
 export default {
   user,
