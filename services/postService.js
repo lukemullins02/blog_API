@@ -12,11 +12,10 @@ async function postBlog(userID, title, blog) {
 
 async function getPost(id) {
   return await prisma.post.findUnique({
-    relationLoadStrategy: "join",
+    where: { id: Number(id) },
     include: {
       users: true,
     },
-    where: { id: Number(id) },
   });
 }
 
