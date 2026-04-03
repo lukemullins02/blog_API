@@ -14,4 +14,4 @@ router.delete(
   controller.deleteComment,
 );
 
-export default router;
+module.exports = router;
