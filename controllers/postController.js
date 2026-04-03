@@ -27,8 +27,11 @@ const postBlog = [
 const getPost = async (req, res) => {
   try {
     const { postid } = req.params;
+    console.log("hello");
 
     const post = await service.getPost(postid);
+
+    console.log("hello");
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

@@ -14,7 +14,11 @@ async function getPost(id) {
   return await prisma.post.findUnique({
     where: { id: Number(id) },
     include: {
-      users: true,
+      user: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
 }
