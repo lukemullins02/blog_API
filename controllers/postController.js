@@ -31,7 +31,7 @@ const getPost = async (req, res) => {
     const post = await service.getPost(postid);
 
     if (!post) {
-      return res.status(404).json({ post: "Post not found" });
+      return res.status(404).json({ message: "Post not found" });
     }
 
     return res.status(200).json(post);
