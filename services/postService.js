@@ -16,10 +16,8 @@ async function getPost(id) {
   });
 }
 
-async function getPosts(userID) {
-  return await prisma.post.findMany({
-    where: { userID },
-  });
+async function getPosts() {
+  return await prisma.post.findMany();
 }
 
 async function putPost(id, title, blog) {
