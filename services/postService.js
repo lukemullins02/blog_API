@@ -24,7 +24,15 @@ async function getPost(id) {
 }
 
 async function getPosts() {
-  return await prisma.post.findMany();
+  return await prisma.post.findMany({
+    include: {
+      user: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  });
 }
 
 async function putPost(id, title, blog) {
