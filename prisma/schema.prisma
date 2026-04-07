@@ -12,6 +12,7 @@ model User{
   password String 
   posts Post[]
   comments Comment[]
+  isAdmin Boolean @default(false)
   @@map("users")
 }
 
@@ -20,6 +21,7 @@ model Post{
   title String 
   blog String 
   uploadAt DateTime @default(now())
+  isPublished Boolean @default(false)
   user User  @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID Int @map("user_id")
   comments Comment[]
