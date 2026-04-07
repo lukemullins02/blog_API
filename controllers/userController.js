@@ -59,7 +59,7 @@ const adminLogin = async (req, res) => {
     if (!user.isAdmin) {
       return res
         .status(400)
-        .json({ message: "User does not have admin privellages." });
+        .json({ message: "User does not have admin privileges." });
     }
 
     const token = jwt.sign({ user }, secret, { expiresIn: "1h" });
