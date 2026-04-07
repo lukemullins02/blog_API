@@ -45,6 +45,13 @@ async function putPost(id, title, blog) {
   });
 }
 
+async function putPublish(id, isPublished) {
+  await prisma.post.update({
+    where: { id: Number(id) },
+    data: { isPublished },
+  });
+}
+
 async function deletePost(id) {
   await prisma.post.delete({
     where: { id: Number(id) },
@@ -56,5 +63,6 @@ module.exports = {
   getPost,
   getPosts,
   putPost,
+  putPublish,
   deletePost,
 };

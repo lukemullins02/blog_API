@@ -72,11 +72,25 @@ const putPost = async (req, res) => {
   }
 };
 
+const putPublish = async (req, res) => {
+  try {
+    const { postid, published } = req.body;
+
+    if (!published) {
+      return res.status(400).json({ message: "Publish status not recieved" });
+    }
+
+    await service.putPublish(postid, published);
+
+    return res.status(200).json({ postid, published });
+  } catch {
+    return res.status(500).json({ message: "Failed to update publish status" });
+  }
+};
+
 const deletePost = async (req, res) => {
   try {
     const { postid } = req.params;
-
-    console.log(deletePost);
 
     await service.deletePost(postid);
 
@@ -91,5 +105,6 @@ module.exports = {
   getPost,
   getPosts,
   putPost,
+  putPublish,
   deletePost,
 };
