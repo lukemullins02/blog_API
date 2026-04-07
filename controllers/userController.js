@@ -36,6 +36,42 @@ const postUser = [
   },
 ];
 
+const adminLogin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await service.getUser(username);
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid Username. Try again.",
+      });
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      return res
+        .status(400)
+        .json({ message: "Incorrect Password. Try again." });
+    }
+
+    if (!user.isAdmin) {
+      return res
+        .status(400)
+        .json({ message: "User does not have admin privellages." });
+    }
+
+    const token = jwt.sign({ user }, secret, { expiresIn: "1h" });
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({
+      message: "Login Failed",
+    });
+  }
+};
+
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -69,4 +105,5 @@ const login = async (req, res) => {
 module.exports = {
   postUser,
   login,
+  adminLogin,
 };
