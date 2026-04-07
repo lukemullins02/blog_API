@@ -74,7 +74,10 @@ const putPost = async (req, res) => {
 
 const putPublish = async (req, res) => {
   try {
-    const { postid, published } = req.body;
+    const { postid } = req.params;
+    const { published } = req.body;
+
+    console.log(postid, published);
 
     if (!published) {
       return res.status(400).json({ message: "Publish status not recieved" });
