@@ -25,6 +25,7 @@ async function getPost(id) {
 
 async function getPosts() {
   return await prisma.post.findMany({
+    orderBy: "desc",
     include: {
       user: {
         select: {

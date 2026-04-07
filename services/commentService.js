@@ -12,6 +12,7 @@ async function postComment(userID, postID, text) {
 
 async function getComments(postID) {
   return await prisma.comment.findMany({
+    orderBy: "desc",
     where: { postID: Number(postID) },
     include: {
       user: {
