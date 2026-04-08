@@ -27,11 +27,8 @@ const postBlog = [
 const getPost = async (req, res) => {
   try {
     const { postid } = req.params;
-    console.log("hello");
 
     const post = await service.getPost(postid);
-
-    console.log("hello");
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -55,29 +52,32 @@ const getPosts = async (req, res) => {
   }
 };
 
-const putPost = async (req, res) => {
-  try {
-    const { postid } = req.params;
-    const { title, blog } = req.body;
+const putPost = [
+  validatePost,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
 
-    if (!title || !blog) {
-      return res.status(400).json({ message: "Title and blog are required" });
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
+
+      const { postid } = req.params;
+      const { title, blog } = req.body;
+
+      await service.putPost(postid, title, blog);
+
+      return res.status(200).json({ postid, title, blog });
+    } catch {
+      return res.status(500).json({ message: "Failed to update post" });
     }
-
-    await service.putPost(postid, title, blog);
-
-    return res.status(200).json({ postid, title, blog });
-  } catch {
-    return res.status(500).json({ message: "Failed to update post" });
-  }
-};
+  },
+];
 
 const putPublish = async (req, res) => {
   try {
     const { postid } = req.params;
     const { published } = req.body;
-
-    console.log(postid, published);
 
     if (published === undefined) {
       return res.status(400).json({ message: "Publish status not recieved" });

@@ -16,10 +16,6 @@ const postComment = [
       const { postid } = req.params;
       const { text } = matchedData(req);
 
-      if (!text) {
-        return res.status(400).json({ message: "Text is required" });
-      }
-
       await service.postComment(id, postid, text);
 
       return res.status(201).json({ id, postid, text });
@@ -57,22 +53,27 @@ const getComments = async (req, res) => {
   }
 };
 
-const putComment = async (req, res) => {
-  try {
-    const { commentid } = req.params;
-    const { text } = req.body;
+const putComment = [
+  validateComment,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
 
-    if (!text) {
-      return res.status(400).json({ message: "Text is required" });
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
+
+      const { commentid } = req.params;
+      const { text } = req.body;
+
+      await service.putComment(commentid, text);
+
+      return res.status(200).json({ commentid, text });
+    } catch {
+      return res.status(500).json({ message: "Failed to update comment" });
     }
-
-    await service.putComment(commentid, text);
-
-    return res.status(200).json({ commentid, text });
-  } catch {
-    return res.status(500).json({ message: "Failed to update comment" });
-  }
-};
+  },
+];
 
 const deleteComment = async (req, res) => {
   try {
