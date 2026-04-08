@@ -64,7 +64,7 @@ const putComment = [
       }
 
       const { commentid } = req.params;
-      const { text } = req.body;
+      const { text } = matchedData(req);
 
       await service.putComment(commentid, text);
 

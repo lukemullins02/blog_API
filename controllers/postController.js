@@ -63,7 +63,7 @@ const putPost = [
       }
 
       const { postid } = req.params;
-      const { title, blog } = req.body;
+      const { title, blog } = matchedData(req);
 
       await service.putPost(postid, title, blog);
 
