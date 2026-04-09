@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
 const titleLength = "must be between 5 and 120 characters.";
-const blogLength = "must be between 50 and 10000.";
+const blogLength = "must be between 50 and 10000 characters.";
 
 const validatePost = [
   body("title")
